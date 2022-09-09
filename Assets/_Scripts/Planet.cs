@@ -6,7 +6,6 @@ using UnityEngine;
 public class Planet : MonoBehaviour
 {
     [SerializeField] int lives;
-    [SerializeField] int damageReceived;
     [SerializeField] int damageForHit;
     HealthManager healthManager;
 
@@ -25,8 +24,12 @@ public class Planet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other) {
         if(other.gameObject.layer == (int)Layers.Enemy) {
-            damageReceived += 1;
-            healthManager.TakeDamage(damageReceived);
+            healthManager.TakeDamage(damageForHit);
+            other.gameObject.SetActive(false);
         }
+    }
+
+    public int GetLive() {
+        return healthManager.GetCurrentHealth();
     }
 }

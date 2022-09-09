@@ -11,6 +11,7 @@ public class ObjectPool : MonoBehaviour
     [SerializeField] int poolSize;
     [SerializeField] PoolableObject prefab;
     [SerializeField] List<PoolableObject> pool;
+    [SerializeField] List<PoolableObject> activeObj;
 
     void Awake() {
         pool = new List<PoolableObject>();
@@ -30,7 +31,9 @@ public class ObjectPool : MonoBehaviour
 
     public void addToPool(PoolableObject element) {
         pool.Add(element);
+        activeObj.Remove(element);
     }
+    
 
     public PoolableObject GetNext() {
 #if UNITY_EDITOR
@@ -40,7 +43,15 @@ public class ObjectPool : MonoBehaviour
 
         PoolableObject element = pool[0];
         pool.RemoveAt(0);
+        activeObj.Add(element);
         return element;
+    }
+
+    public void CleanActiveList() {
+        List<PoolableObject> tmpActive = new List<PoolableObject>(activeObj);
+        foreach (PoolableObject element in tmpActive) {
+            element.gameObject.SetActive(false);
+        }
     }
 
     private void CheckEmptyPoolException() {

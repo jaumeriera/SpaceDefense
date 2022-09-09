@@ -8,4 +8,6 @@ public class SpawnProjectileScriptable : ScriptableObject
     [Header("Configuration")] 
     public float StartWaitTime;
     public float cooldown;
+    public float bombCooldown;
+    public int bombs;
 }
