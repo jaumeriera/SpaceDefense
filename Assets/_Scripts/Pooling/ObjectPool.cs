@@ -54,6 +54,10 @@ public class ObjectPool : MonoBehaviour
         }
     }
 
+    public int GetActiveLenght() {
+        return activeObj.Count;
+    }
+
     private void CheckEmptyPoolException() {
         if (pool.Count == 0 && ThrowErrorOnEmpty) {
             throw new Exception("Calling GetNext on empty Pool");
@@ -64,5 +68,9 @@ public class ObjectPool : MonoBehaviour
         if (pool.Count == 0) {
             CreateElement();
         }
+    }
+
+    public List<PoolableObject> GetActiveElements() {
+        return activeObj;
     }
 }

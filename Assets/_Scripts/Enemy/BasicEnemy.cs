@@ -5,21 +5,56 @@ using UnityEngine;
 public class BasicEnemy : PoolableObject
 {
     [SerializeField] BasicEnemyScriptable _settings;
+    [SerializeField] GameObject explosion;
+
+    [SerializeField] AudioSource explosionSound;
+
+    MeshRenderer renderer;
+    Collider collider;
+
+    public bool destroyed = false;
+
+    private void Awake() {
+        renderer = GetComponent<MeshRenderer>();
+        collider = GetComponent<Collider>();
+    }
+
+    private void OnEnable() {
+        destroyed = false;
+        renderer.enabled = true;
+        collider.enabled = true;
+        explosion.SetActive(false);
+    }
 
     void Update()
     {
-        transform.position = new Vector3(transform.position.x - _settings.speed * Time.deltaTime, transform.position.y, 0);
+        if (!destroyed) {
+            transform.position = new Vector3(transform.position.x - _settings.speed * Time.deltaTime, transform.position.y, 0);
+        }
     }
 
     private void OnTriggerEnter(Collider other) {
         if(other.gameObject.layer == (int)Layers.Player) {
-            other.gameObject.SetActive(false);
-            this.gameObject.SetActive(false);
+            destroyed = true;
+            other.GetComponent<PlayerController>().DestroyShip();
+            DestroyShip();
         }
     }
+    
+    public void DestroyShip() {
+        destroyed = true;
+        StartCoroutine(Explosion());
+    }
 
-    protected override void OnDisable() {
-        base.OnDisable();
-        // Explode effect and sound
+    private IEnumerator Explosion() {
+        if (destroyed) {
+            explosionSound.Play();
+            renderer.enabled = false;
+            collider.enabled = false;
+            explosion.SetActive(true);
+            // play sound
+            yield return new WaitForSeconds(5);
+        }
+        gameObject.SetActive(false);
     }
 }

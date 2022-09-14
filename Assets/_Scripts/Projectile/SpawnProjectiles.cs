@@ -11,6 +11,9 @@ public class SpawnProjectiles : MonoBehaviour
     ObjectPool playerProjectilesPool;
     [SerializeField] GameObject bombObject;
 
+    [SerializeField] AudioSource projectileShot;
+    [SerializeField] AudioSource emptyBomb;
+
     float timeFromLastSpawn;
     float timeFromLastBomb;
     bool shooting;
@@ -58,7 +61,7 @@ public class SpawnProjectiles : MonoBehaviour
                 timeFromLastBomb = 0;
             }
             else {
-                // TODO implement sound empty ammo
+                emptyBomb.Play();
             }
         }
     }
@@ -80,8 +83,10 @@ public class SpawnProjectiles : MonoBehaviour
     }
 
     private void SpawnProjectile() {
+        projectileShot.Play();
         Projectile projectile = (Projectile)playerProjectilesPool.GetNext();
         projectile.transform.position = gameObject.transform.position;
         projectile.gameObject.SetActive(true);
     }
+
 }

@@ -6,12 +6,22 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     Rigidbody _rigidbody;
+    MeshRenderer renderer;
+    Collider collider;
+    [SerializeField] GameObject gameOver;
+    [SerializeField] GameObject explosion;
+    [SerializeField] List<GameObject> toDeactivate;
 
     [Header("Configuration")]
     [SerializeField] PlayerScriptable _settings;
 
+    bool destroyed;
+
     private void Awake() {
         _rigidbody = GetComponent<Rigidbody>();
+        renderer = GetComponent<MeshRenderer>();
+        collider = GetComponent<Collider>();
+        destroyed = false;
     }
 
     private void Start() {
@@ -19,10 +29,27 @@ public class PlayerController : MonoBehaviour
     }
 
     public void OnMove(InputAction.CallbackContext ctx) {
-        _rigidbody.velocity = ctx.ReadValue<Vector2>() * _settings.speed;
+        if (!destroyed) {
+            _rigidbody.velocity = ctx.ReadValue<Vector2>() * _settings.speed;
+        }
     }
 
-    private void OnDisable() {
-        // TODO Explosion and sound and call to game over
+    public void DestroyShip() {
+        destroyed = true;
+        StartCoroutine(Explosion());
+    }
+    private IEnumerator Explosion() {
+
+        renderer.enabled = false;
+        collider.enabled = false;
+        foreach(GameObject element in toDeactivate) {
+            element.SetActive(false);
+        }
+        explosion.SetActive(true);
+        gameOver.SetActive(true);
+        // play sound
+        yield return new WaitForSeconds(5);
+
+        gameObject.SetActive(false);
     }
 }

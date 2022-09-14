@@ -5,12 +5,13 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] EnemySpawnerScriptable _settings;
+    [SerializeField] GameObject hordeText;
 
     public static int scorePerEnemy;
 
     ObjectPool enemyPool;
 
-    int currentHorde;
+    public int currentHorde;
     int spawnedEnemies;
     float currentHordeEnemies;
     float timeFromLastSpawn;
@@ -59,6 +60,7 @@ public class EnemySpawner : MonoBehaviour
         currentHordeEnemies *= _settings.bonusNextHordeEnemies;
         currentHorde += 1;
         // TODO show current horde
+        hordeText.SetActive(true);
         StartCoroutine(SpawnHorde());
     }
 

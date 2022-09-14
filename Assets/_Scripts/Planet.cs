@@ -7,6 +7,10 @@ public class Planet : MonoBehaviour
 {
     [SerializeField] int lives;
     [SerializeField] int damageForHit;
+    [SerializeField] GameObject gameOver;
+
+    [SerializeField] AudioSource collisionSound;
+
     HealthManager healthManager;
 
     private void Awake() {
@@ -18,15 +22,20 @@ public class Planet : MonoBehaviour
     }
 
     private void Die() {
-        // TODO implement call to gameOver
-        print("die");
+        gameOver.SetActive(true);
     }
 
     private void OnTriggerEnter(Collider other) {
         if(other.gameObject.layer == (int)Layers.Enemy) {
             healthManager.TakeDamage(damageForHit);
+            StartCoroutine(PlaySound());
             other.gameObject.SetActive(false);
         }
+    }
+
+    private IEnumerator PlaySound() {
+        collisionSound.Play();
+        yield return new WaitForSeconds(1);
     }
 
     public int GetLive() {

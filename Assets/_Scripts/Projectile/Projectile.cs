@@ -14,8 +14,7 @@ public class Projectile : PoolableObject
     private void OnTriggerEnter(Collider other) {
         if (other.gameObject.layer == (int)Layers.Enemy) {
             Score.score += EnemySpawner.scorePerEnemy;
-            print(Score.score);
-            other.gameObject.SetActive(false);
+            other.gameObject.GetComponent<BasicEnemy>().DestroyShip();
             this.gameObject.SetActive(false);
         }
     }

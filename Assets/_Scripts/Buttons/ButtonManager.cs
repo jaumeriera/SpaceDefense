@@ -19,4 +19,8 @@ public class ButtonManager : MonoBehaviour
     public static void LeaderBoard() {
         SceneManager.DoChangeScene(Scenes.LeaderBoard);
     }
+
+    public static void Exit() {
+        Application.Quit();
+    }
 }
