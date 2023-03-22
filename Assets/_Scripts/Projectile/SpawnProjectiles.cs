@@ -9,9 +9,15 @@ public class SpawnProjectiles : MonoBehaviour
     [SerializeField] SpawnProjectileScriptable _settings;
 
     ObjectPool playerProjectilesPool;
+    [SerializeField] GameObject bombObject;
+
+    [SerializeField] AudioSource projectileShot;
+    [SerializeField] AudioSource emptyBomb;
 
     float timeFromLastSpawn;
+    float timeFromLastBomb;
     bool shooting;
+    public int bombs;
     //Coroutine ShootProjectilesReference;
 
     void Awake() {
@@ -20,11 +26,13 @@ public class SpawnProjectiles : MonoBehaviour
 
     void Start()
     {
+        bombs = _settings.bombs;
         timeFromLastSpawn = -_settings.StartWaitTime;
     }
 
     private void Update() {
         timeFromLastSpawn += Time.deltaTime;
+        timeFromLastBomb += Time.deltaTime;
 
         // This lines could be removed if coroutines works
         if (shooting && timeFromLastSpawn >= _settings.cooldown) {
@@ -44,6 +52,25 @@ public class SpawnProjectiles : MonoBehaviour
 
     }
 
+    public void OnFire2(InputAction.CallbackContext ctx) {
+        
+        if (ctx.performed && timeFromLastBomb > _settings.bombCooldown) {
+            if (bombs > 0) {
+                bombs -= 1;
+                SpawnBomb();
+                timeFromLastBomb = 0;
+            }
+            else {
+                emptyBomb.Play();
+            }
+        }
+    }
+
+    private void SpawnBomb() {
+        bombObject.transform.position = gameObject.transform.position;
+        bombObject.SetActive(true);
+    }
+
     // I dont know why but this function makes unity crash 
     private IEnumerator ShootProjectiles() {
         while (true) {
@@ -56,8 +83,10 @@ public class SpawnProjectiles : MonoBehaviour
     }
 
     private void SpawnProjectile() {
+        projectileShot.Play();
         Projectile projectile = (Projectile)playerProjectilesPool.GetNext();
         projectile.transform.position = gameObject.transform.position;
         projectile.gameObject.SetActive(true);
     }
+
 }

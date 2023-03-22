@@ -23,6 +23,8 @@
 .vs/
 .vsconfig
 
+PolygonSciFiSpace/
+
 # Gradle cache directory
 .gradle/
 

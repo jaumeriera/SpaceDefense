@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: SpawnProjectileScriptable
   m_EditorClassIdentifier: 
   StartWaitTime: 0
-  cooldown: 0.5
+  cooldown: 0.32
+  bombCooldown: 1.5
+  bombs: 3
